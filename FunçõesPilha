@@ -1,0 +1,73 @@
+#include <iostream>
+#include <stdlib.h>
+
+/* run this program using the console pauser or add your own getch, system("pause") or input loop */
+
+struct no{
+    int info;
+    struct no* elo;
+};
+typedef struct no* Pilha;
+
+Pilha Cria_pilha(void)
+{
+   return NULL;
+}
+
+int Push(Pilha *Ptp, int elem){  //inserir
+  Pilha pt;
+  pt= (Pilha)malloc(sizeof(struct no));
+  if (pt == NULL)
+      return 0;
+  pt->elo = (*Ptp);
+  pt->info = elem;
+  (*Ptp) = pt;
+  return 1;
+}
+int* Pop(Pilha* Ptp){    //remover
+   int* elem;
+   Pilha aux = (*Ptp); //aux copia do ptp
+   if ((*Ptp) == NULL)
+      return NULL;
+   elem = (int*) malloc(sizeof(int));
+   *elem = (*Ptp)->info;
+   (*Ptp)= (*Ptp)->elo;
+    free(aux); //mata a copia
+   return elem;
+}
+int* Top(Pilha Ptp){ //imprimir verifica o topo
+   int* elem;
+   if (Ptp == NULL)
+      return NULL;//fim da pilha
+    elem = (int*) malloc(sizeof(int));
+   *elem = Ptp->info; //ptp elo
+   return elem;
+}
+void Libera_pilha(Pilha* Ptp) //destruir
+{
+   Pilha aux;//um por um
+   while ((*Ptp) != NULL)
+   {//aux ptp mato ele
+      aux = (*Ptp);
+      (*Ptp) = (*Ptp)->elo;
+      free(aux);
+   }
+}
+int E_cheia(Pilha Ptp){
+    return 0;
+}
+int E_vazia(Pilha Ptp){
+    if (Ptp == NULL)
+      return 1;
+    else return 0;
+}
+
+int main() {
+	Pilha p;
+	E_cheia();
+	E_vazia();
+    Cria_pilha();
+    Push();
+	 pop();
+    Top();
+}
