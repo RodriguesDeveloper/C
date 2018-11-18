@@ -1,0 +1,126 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct arv{  
+	char info;
+	struct arv* esq;
+ 	struct arv* dir;
+};
+typedef struct arv Arv;
+
+//operacoes da arvore
+//prototipo das funções
+Arv* arv_criavazia(void);//return arv* ou seja cria um nó, agora que tipo de parametro void
+Arv* arv_cria (char c, Arv* e, Arv* d);//retorna nó tipo avr*, parametros informações c e d (direita esquerda)
+Arv* arv_libera (Arv* a);//retorna Arv*, recebe como parametros a;
+int	arv_vazia (Arv* a);// retorna int, parametros a;
+int	arv_pertence (Arv* a, char c);//retorna int, parametros a;
+void arv_imprime (Arv* a);//retorna vazio(void), parametros Arv* a
+
+Arv* arv_criavazia (void){
+	return NULL;//criar uma arvore vazia
+}
+
+Arv* arv_cria (char c, Arv* sae, Arv* sad){//p tipo arv /ARV* APONTADOR
+	Arv* p=(Arv*)malloc(sizeof(Arv));//cria nó raiz e duas sub arvores esquerda direita
+	p->info = c;//cria um nó atribui p, quest forca ter certeza que é do tipo arv
+	p->esq = sae;//3 campos info esq dir, q recebe c sae e sad e retorna p(volta p main)
+	p->dir = sad;
+	return p;
+}
+
+int arv_vazia (Arv* a){
+	return a==NULL;
+}
+
+Arv* arv_libera(Arv* a){ //recebe o nó como parametro
+	if (!arv_vazia(a)){   
+	arv_libera(a->esq);//elimina o no da esquerda
+	arv_libera(a->dir);//elimina o no da direita
+	free(a);//elimina o proprio nó
+}
+	return NULL;
+}
+
+int arv_pertence (Arv* a, char c){//checar se esta na arvore ou nao
+  if (arv_vazia(a))  //parametro ponteiro a, verifique arvore inteira
+return 0;//passar como referencia nó a, pois é raiz
+   else//char c informação que estou buscando
+return a->info==c ||  arv_pertence(a->esq,c) ||  arv_pertence(a->dir,c);//pré-ordem: raiz esq dir//simetrica esq,raiz, dir//pos ordem: esq, dire, raiz
+}//juntando tudo detro do return[o que tem dentro do elemento raiz a
+//retorna 1 OU percorre esq OU direita
+
+void arv_imprime (Arv* a){
+if (!arv_vazia(a)){
+printf("%c ", a->info); 
+arv_imprime(a->esq);
+arv_imprime(a->dir);
+}
+}
+
+int menu(){
+	int opc;
+	printf("\n-----menu----\n"
+	       "-1. Cria uma arvore\n"
+		   "-2. Libera um no\n"
+		   "-3. Imprime arvore\n"
+		   "-0. Sair\n"
+		   "Digite o que desejado. Opcao:");
+	scanf("%d",&opc);
+	return opc;
+}
+
+int main() {
+	Arv* nod;
+	Arv* nob;
+	Arv* noe;
+	Arv* nof;
+	Arv* noc;
+	Arv* noa;
+   	//Arv = arv_criavazia();
+   	/*passa info 'd' ,e arv_criavazia null
+    nod = arv_cria ('d', arv_criavazia(), arv_criavazia());
+	nob = arv_cria ('b', nod, arv_criavazia());//mata o resto 
+	noe = arv_cria ('e', arv_criavazia(), arv_criavazia());
+	nof = arv_cria ('f', arv_criavazia(), arv_criavazia());
+	noc = arv_cria ('c', noe,nof);
+	noa = arv_cria ('a', nob,noc);	
+    //Arv* aux = arv_libera(nob);
+	int x;
+	x = arv_pertence(noa, 'a');
+	printf("arv_pertence:");
+	printf("%d\n",x);
+	arv_imprime(noa);
+}*/
+//----------------switch---------------------------
+	Arv arvore;
+	int opc;
+	//char v[6];
+	do{
+		
+    opc=menu();//chamando menu
+    
+    system("cls");
+    
+    switch(opc) {
+    case 1://arvore
+	nod = arv_cria ('d', arv_criavazia(), arv_criavazia());
+	nob = arv_cria ('b', nod, arv_criavazia());
+	noe = arv_cria ('e', arv_criavazia(), arv_criavazia());
+	nof = arv_cria ('f', arv_criavazia(), arv_criavazia());
+	noc = arv_cria ('c', noe,nof);
+	noa = arv_cria ('a', nob,noc);	
+	printf("arvore criada!");
+	break;
+    case 2:
+		arv_libera(nob);
+	    printf("Liberado!\n");
+	break;
+    case 3:
+    	printf("Arvore!\n");
+	    arv_imprime(noa);
+	break;
+	}
+  } while(opc!=0);//saindo
+
+}
