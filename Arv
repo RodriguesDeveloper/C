@@ -1,0 +1,322 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct nodo {
+ char dado;
+ int fatbal;
+ struct nodo *esq, *dir;
+} arvoreAVL;
+
+//-------------------------------------------
+void LeArv(arvoreAVL **inicio) {
+ if (*inicio == NULL) 
+   printf (".");
+ else {
+   printf ("%c" , (*inicio)->dado);
+   LeArv (&((*inicio)->esq));
+   LeArv (&((*inicio)->dir));  
+ }
+}
+
+//-------------------------------------------
+void InicializaAVL (arvoreAVL **inicio){
+ *inicio = malloc (sizeof (arvoreAVL));
+ (*inicio)->esq = NULL;
+ (*inicio)->dir = NULL;
+ }
+ void InsereAVL (arvoreAVL *adesc, char dadonovo) {
+ arvoreAVL *paux, *pant, *pP, *pQ, *pantP, *pnovo;
+ int poschave;
+ int achou; 
+
+//-------rotação simples---------------------
+void RotacaoSimples (){
+ if (pP->fatbal == 1) {
+   pP->dir = pQ->esq;
+   pQ->esq = pP;
+ }
+ else {
+   pP->esq = pQ->dir;
+   pQ->dir = pP;
+ }
+ paux = pQ;
+ pP->fatbal = 0;
+ pQ->fatbal = 0;
+}
+
+//-------fim do rotação simples-------------
+
+//-------rotação dupla ---------------------
+void RotacaoDupla (){
+ if (pP->fatbal == 1) {
+   paux = pQ->esq;
+   pQ->esq = paux->dir;
+   paux->dir = pQ;
+   pP->dir = paux->esq;
+   paux->esq = pP;
+ }
+ else {
+   paux = pQ->dir;
+   pQ->dir = paux->esq;
+   paux->esq = pQ;
+   pP->esq = paux->dir;
+   paux->dir = pP;
+ }
+ if (paux->fatbal == -poschave){
+   pP->fatbal = 0;
+   pQ->fatbal = poschave;
+ }
+ else 
+   if (paux->fatbal == 0) {
+     pP->fatbal = 0;
+     pQ->fatbal = 0;
+   }
+   else {
+     pP->fatbal = -poschave;
+     pQ->fatbal = 0;
+   }
+ paux->fatbal = 0;
+}
+//-------fim do rotação dupla -------------
+
+//-------ajustfatores---------------------
+void AjustaFatoresAVL (){
+ if (dadonovo < pP->dado){
+   pQ = pP->esq;
+   paux = pP->esq;
+ }
+ else {
+   pQ = pP->dir;
+   paux = pP->dir;
+ }
+ while (paux->dado != dadonovo)
+   if (dadonovo < paux->dado) {
+     paux->fatbal = paux->fatbal - 1;
+     paux = paux->esq;
+   }
+   else {
+     paux->fatbal = paux->fatbal + 1;
+     paux = paux->dir;
+   }
+}
+//-------fim do ajusta fatores-------------
+
+//-------balanceia-------------------------
+void BalanceiaAVL (){
+ if (dadonovo < pP->dado)
+   poschave = -1;
+ else
+   poschave = 1;
+ if (pP->fatbal == 0)
+   pP->fatbal = poschave;
+ else 
+   if (pP->fatbal == -poschave)
+     pP->fatbal = 0;
+   else {
+     if (pQ->fatbal * poschave > 0)
+       RotacaoSimples ();
+     else
+       RotacaoDupla ();
+     if (pantP->dir == pP)
+       pantP->dir = paux;
+     else
+       pantP->esq = paux;
+   }
+}
+//-------fim do balanceia------------------
+
+//---- corpo do InsereAVL -----------------
+
+ paux = adesc->dir;
+ pP = paux;
+ pant = adesc;
+ pantP = adesc;
+ achou = 0;
+ while ((!achou) && (paux != NULL)) {
+   if (paux->fatbal != 0) {
+     pP = paux;
+     pantP = pant;
+   }
+   pant = paux;
+   if (dadonovo == paux->dado)
+     achou = 1;
+   else
+     if (dadonovo < paux->dado)
+       paux = paux->esq;
+     else
+       paux = paux->dir;
+ }
+ if (achou)
+   printf("este dado ja esta presente na arvore\n");
+ else {
+   pnovo = malloc (sizeof (arvoreAVL));
+   pnovo->dado = dadonovo;
+   pnovo->esq = NULL;
+   pnovo->dir = NULL;
+   pnovo->fatbal = 0;
+   if (adesc->dir == NULL)
+     adesc->dir = pnovo;
+   else {
+     if (dadonovo < pant->dado)
+       pant->esq = pnovo;
+     else
+       pant->dir = pnovo;
+     AjustaFatoresAVL ();
+     BalanceiaAVL ();
+   }
+ }
+}
+
+//--------------------------------------------
+main ()
+{
+ arvoreAVL *aini;
+ char c, resp;
+
+ InicializaAVL (&aini);  
+ printf ("deseja entrar um primeiro valor na arvore? (s/n)\n");
+ fflush(stdin);
+ scanf ("%c" , &resp);
+ while (resp == 's') {
+   printf ("entre com valor a ser inserido na arvore\n");
+   fflush(stdin);
+   scanf ("%c" , &c);  
+   InsereAVL (aini, c);
+   printf ("deseja entra mais algum valor? (s/n)\n");
+   fflush(stdin);
+   scanf ("%c" , &resp);
+ }
+
+ LeArv (&((aini)->dir));
+
+
+ printf("\n\n");
+ system("pause");
+}
+/**/
+/*#include <stdio.h>
+#include <stdlib.h>
+/* run this program using the console pauser or add your own getch, system("pause") or input loop */
+/*struct No{
+	int info;
+	int alt;//altura sub-árvore//usa para calcular fb
+	struct No *esq;
+	struct No *dir;
+};
+typedef struct No* ArvAvl;
+
+/*-------cria-----
+ArvAvl* criaArvAvl(){
+	ArvAvl* raiz;
+	raiz = (ArvAvl*) malloc (sizeof(ArvAvl));
+	if(raiz != NULL){
+		*raiz = NULL;
+	    return raiz;
+	}
+}
+
+/*Insercao----Arvore---Avl
+ int insere(ArvAvl *raiz, int valor ){
+ 	int res;
+ 	if(*raiz == NULL){
+ 		struct No *novo;
+ 		novo = (struct No*) malloc (sizeof(struct No));
+ 		if(novo == NULL){
+ 			return 0;
+		}else{
+		novo->info = valor;
+		novo->alt = 0;
+		novo->esq = NULL;
+		novo->dir = NULL;
+		*raiz = novo;
+		return 1;
+		} 
+	}
+	struct No *atual = *raiz;
+	if (valor < atual->info){
+		if((res=insere(&(atual->esq), valor))==1){
+			if(fb(atual) >= 2){
+				if(valor < (*raiz)->esq->info){
+					rotacaoLL(raiz);
+				}else{
+					rotacaoLR(raiz);
+				}
+			}
+		}
+	}else{
+		if(valor > atual->info){
+			if((res = insere(&(atual->dir), valor))==1){
+				if(fb(atual) >= 2){
+					rotacaoRR(raiz);
+				}else{
+					rotacaoLR(raiz);
+				}
+			}
+		}else{
+		printf("Valor duplicado!\n");
+		return 0;
+		}
+	}
+	atual->alt = maior(alt(atual->esq), alt(atual->dir)) + 1;
+	return res;
+}
+
+int alt(struct No* no){
+	if(no == NULL){
+		return -1;
+	}else{
+		return no->alt;
+	}
+}
+
+int fb(struct No* no){//labs: valor absoluto de um inteiro longo
+	return labs(alt(no->esq) - alt(no->dir));
+}
+
+int maior(int x,int y){
+	if(x>y){
+		return x;
+	}else{
+		return y;
+	}
+}
+/*----------Rotacao--Duplas/Implementada--com--duas--simples-----------------------------
+void rotacaoLL(ArvAvl *raiz){
+	struct No *no;
+	no = (*raiz)->esq;
+	(*raiz)->esq = no->dir;
+	no->dir = (*raiz);
+	(*raiz)->alt = maior(alt((*raiz)->esq), alt((*raiz)->dir)) +1;
+	no->alt = maior(alt(no->esq), (*raiz)->alt) + 1;
+	(*raiz) = no;
+}
+
+void rotacaoRR(ArvAvl *raiz){
+	struct No *no;
+	no = (*raiz)->dir;
+	(*raiz)->dir = no->esq;
+	no->esq = (*raiz);
+	(*raiz)->alt = maior(alt((*raiz)->esq), alt((*raiz)->dir)) +1;
+	no->alt = maior(alt(no->dir), (*raiz)->alt) + 1;
+	(*raiz) = no;
+}
+
+void rotacaoLR(ArvAvl *raiz){
+	rotacapLR(&(*raiz)->esq);
+	rotcaoLL(raiz);
+}
+/*----------imprime--------------------
+int Imprime_ArvAvl(){
+	ArvAvl raiz;
+	printf("Valor:%d\n",raiz->info);
+	Imprime_ArvAvl(raiz->esq);
+	Imprime_ArvAvl(raiz->dir);
+}
+
+int main(){
+    ArvAvl* raiz = criaArvAvl();
+    
+    insere(raiz,7);
+	
+	Imprime_ArvAvl();
+}*/
