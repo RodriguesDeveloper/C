@@ -1,2 +1,2 @@
-# LinguagemC
-Código_Estrutura_de_Dados
+LinguagemC
+
